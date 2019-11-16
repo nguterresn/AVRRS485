@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name SELE_ACS_lib)(type KiCad)(uri ${KIPRJMOD}/SELE_ACS_lib.pretty)(options "")(descr ""))
+  (lib (name Socket_Strips)(type KiCad)(uri ${KIPRJMOD}/Socket_Strips.pretty)(options "")(descr ""))
+)
