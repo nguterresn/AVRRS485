@@ -1,0 +1,37 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>KiCad BOM Example 5</title>
+    </head>
+    <body>
+    <h1>/Users/nunonogueira/Documents/SELE_ACS/SELE_ACS.sch</h1>
+    <p>Thursday, 14 November 2019 at 21:48:20</p>
+    <p>Eeschema (5.1.4-0-10_14)</p>
+    <p><b>Component Count:</b>20</p>
+    <table>
+    <tr><th style='width:640px'>Ref</th><th>Qnty</th><th>Value</th><th>Part</th><th>Footprint</th><th>Description</th><th>Vendor</th></tr>
+    <tr><td>C1, C2</td><td>2</td><td>22pF</td><td>Device:CP1</td><td></td><td>Polarized capacitor, US symbol</td><td></td></tr>
+    <tr><td>C3, C4</td><td>2</td><td>100nF</td><td>Device:C</td><td></td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C5</td><td>1</td><td>10nF</td><td>Device:C</td><td></td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C6</td><td>1</td><td>0.33uF</td><td>Device:C</td><td></td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C7</td><td>1</td><td>0.1uF</td><td>Device:C</td><td></td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>D1</td><td>1</td><td>LED</td><td>Device:LED</td><td></td><td>Light emitting diode</td><td></td></tr>
+    <tr><td>J1</td><td>1</td><td>AVR-ISP-6</td><td>Connector:AVR-ISP-6</td><td></td><td>Atmel 6-pin ISP connector</td><td></td></tr>
+    <tr><td>J2</td><td>1</td><td>Input Cables</td><td>Connector:Conn_01x04_Male</td><td></td><td>Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J3</td><td>1</td><td>FT232 Adapter</td><td>Connector:Conn_01x03_Female</td><td></td><td>Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>R1</td><td>1</td><td>330</td><td>Device:R</td><td></td><td>Resistor</td><td></td></tr>
+    <tr><td>R2</td><td>1</td><td>4.7k</td><td>Device:R</td><td></td><td>Resistor</td><td></td></tr>
+    <tr><td>R3</td><td>1</td><td>47k</td><td>Device:R</td><td></td><td>Resistor</td><td></td></tr>
+    <tr><td>SW1</td><td>1</td><td>Button Reset</td><td>Switch:SW_Push</td><td></td><td>Push button switch, generic, two pins</td><td></td></tr>
+    <tr><td>SW2</td><td>1</td><td>SW_DIP_x04</td><td>Switch:SW_DIP_x04</td><td></td><td>4x DIP Switch, Single Pole Single Throw (SPST) switch, small symbol</td><td></td></tr>
+    <tr><td>U1</td><td>1</td><td>ATmega328P-PU</td><td>MCU_Microchip_ATmega:ATmega328P-PU</td><td>Package_DIP:DIP-28_W7.62mm</td><td>20MHz, 32kB Flash, 2kB SRAM, 1kB EEPROM, DIP-28</td><td></td></tr>
+    <tr><td>U2</td><td>1</td><td>MAX485E</td><td>Interface_UART:MAX485E</td><td></td><td>Half duplex RS-485/RS-422, 2.5 Mbps, ±15kV electro-static discharge (ESD) protection, no slew-rate, no low-power shutdown, with receiver/driver enable, 32 receiver drive kapacitity, DIP-8 and SOIC-8</td><td></td></tr>
+    <tr><td>U3</td><td>1</td><td>LM7805_TO220</td><td>Regulator_Linear:LM7805_TO220</td><td>Package_TO_SOT_THT:TO-220-3_Vertical</td><td>Positive 1A 35V Linear Regulator, Fixed Output 5V, TO-220</td><td></td></tr>
+    <tr><td>Y1</td><td>1</td><td>Crystal</td><td>Device:Crystal</td><td></td><td>Two pin crystal</td><td></td></tr><!--TABLEROW-->
+    </table>
+    </body>
+</html>
+    
