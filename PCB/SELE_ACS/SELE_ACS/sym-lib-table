@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name SELE)(type Legacy)(uri ${KIPRJMOD}/SELE.lib)(options "")(descr ""))
-)
