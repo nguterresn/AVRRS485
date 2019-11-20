@@ -5,8 +5,8 @@
 <img width="874" alt="Captura de ecrã 2019-11-13, às 16 04 25" src="https://user-images.githubusercontent.com/38976366/68781265-6b33ae00-062f-11ea-969e-323784b92777.png">
 
 ### PCB
-This circuit was designed to be easily tested and programmed. In addition to the mandatory requirements, a FT232 interface, a AVR ISP and a 5V volateg regulator was added as optional requirements. 
-- The FT232 interface will allow to test Rx and Tx communications using a FTDI chip connected to a USB port, using a computer to track results. [FTDI](https://en.wikipedia.org/wiki/FTDI)
+This circuit was designed to be easily tested and programmed. In addition to the mandatory requirements, a FT232 interface, a AVR ISP and a 5V voltage regulator was added as optional requirements. 
+- The FT232 interface will allow testing Rx and Tx communications using a FTDI chip connected to a USB port, using a computer to track results. [FTDI](https://en.wikipedia.org/wiki/FTDI)
 - The ISP interface will allow uC to be programmed.
 - 5V Voltage regulator allows acceptance of higher input voltages (up to 12V) without compromising the system behavior. 
 
