@@ -6,7 +6,7 @@
 
 ### USART Configuration
 
-#### Initialization
+### Initialization
 
 Since the PlatoformIO serial monitor is set to a baudrate of 9600, the USART baudrate should be 9600 in order to monitor data:
 
@@ -27,12 +27,107 @@ The frame format should have a **9 bit** to distinguish between address frames a
 UCSR0C = (1<<USBS0)|(1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
 ```
 
-#### Frame Format
+### Frame Format
 
 type | start | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | stopbit | stopbit
 --- | --- | --- | --- |--- |--- |--- |--- |--- |--- |--- |--- |---
 bit | LOW | X | X | X | X | X | X | X | X | X | HIGH | HIGH 
 
+### Transmission
+
+#### Address Frame
+
+Address is defined as:
+```
+#define ADDRESS 1
+```
+
+To send an Address Frame:
+
+```
+send_addr(SLAVE1_ADDR);
+```
+
+Waits until the channel is empty, saves 1 into TXB8 (9 bit) and sends address:
+
+```
+...
+while (!(UCSR0A & (1<<UDRE0)));
+
+UCSR0B |= (1<<TXB80);
+
+UDR0 = addr;
+```
+
+#### Data Frame
+
+Data is defined as:
+```
+#define DATATYPE 0
+```
+
+To send a Data Frame:
+
+```
+send_data(data);
+```
+
+Waits until the channel is empty, saves 0 into TXB8 (9 bit) and sends data:
+
+```
+...
+while (!(UCSR0A & (1<<UDRE0)));
+
+UCSR0B &= ~(1<<TXB80);
+
+UDR0 = data;
+```
+
+### Reception
+
+To receive data, call:
+
+- ADDRESS to return an address;
+- DATATYPE to return a data frame;
+
+```
+get_data(ADDRESS or DATATYPE):
+```
+
+Waits for until receives something and checks if one of these error occur:
+
+- Frame Error
+- Data OverRun
+
+```
+...
+while (!(UCSR0A & (1<<RXC0)));
+
+if (UCSR0A & ((1<<FE0)|(1<<DOR0)))
+	return ERROR;
+```
+
+After checking errors appearance, ninth bit is filtered from UCSR0B register and data is returned:
+
+```
+...
+ninthbit = UCSR0B; 
+ninthbit = (ninthbit >> 1) & 0x01; 
+
+if (ninthbit && type) {
+	return receivedata & 0x0e;
+} else if (!(ninthbit) && !(type)) {
+	return receivedata;
+} else return ERROR;
+```
+
+Since Master has the 15 address, all the slave are within 0 and 14:
+
+```
+...
+return receivedata & 0x0e;
+...
+```
 
 ### System Diagram
 #### Master-Slave - Slave Side
@@ -82,7 +177,8 @@ This circuit was designed to be easily tested and programmed. In addition to the
 
 #### PCB Design
 
-##### Trace's width: 0.3mm. Able to handle 1A through the circuit.
+ - Trace's width: 0.3mm. Able to handle 1A through the circuit.
+
 
 ![tracewidth](https://github.com/nguterresn/SELE-AVRRS485/blob/master/SELE_ACS/Img/tracewidth.png)
 
