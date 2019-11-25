@@ -1,8 +1,14 @@
 # SELE
 
-#### System Concept
+### System Concept
 
 <img width="874" alt="Captura de ecrã 2019-11-13, às 16 04 25" src="https://user-images.githubusercontent.com/38976366/68781265-6b33ae00-062f-11ea-969e-323784b92777.png">
+
+### System Diagram
+#### Master-Slave - Slave Side
+
+![blockdiagramMS](https://user-images.githubusercontent.com/38976366/69570464-c95d7b00-0fb7-11ea-93ed-bc8e6e174572.png)
+
 
 ### PCB
 This circuit was designed to be easily tested and programmed. In addition to the mandatory requirements, a FT232 interface, a AVR ISP and a 5V voltage regulator was added as optional requirements. 
