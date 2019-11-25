@@ -37,11 +37,6 @@ bit | LOW | X | X | X | X | X | X | X | X | X | HIGH | HIGH
 
 #### Address Frame
 
-Address is defined as:
-```
-#define ADDRESS 1
-```
-
 To send an Address Frame:
 
 ```
@@ -61,11 +56,6 @@ UDR0 = addr;
 
 #### Data Frame
 
-Data is defined as:
-```
-#define DATATYPE 0
-```
-
 To send a Data Frame:
 
 ```
@@ -84,6 +74,16 @@ UDR0 = data;
 ```
 
 ### Reception
+
+Address is defined as:
+```
+#define ADDRESS 1
+```
+
+Data is defined as:
+```
+#define DATATYPE 0
+```
 
 To receive data, call:
 
