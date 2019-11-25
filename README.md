@@ -107,6 +107,8 @@ if (UCSR0A & ((1<<FE0)|(1<<DOR0)))
 	return ERROR;
 ```
 
+###### Note: USART Parity Error (UPE0) is not enable since there is no parity bit in the initialize frame.
+
 After checking errors appearance, ninth bit is filtered from UCSR0B register and data is returned:
 
 ```
@@ -121,12 +123,33 @@ if (ninthbit && type) {
 } else return ERROR;
 ```
 
-Since Master has the 15 address, all the slave are within 0 and 14:
+Since Master has the 15th address, all the slave are within 0 and 14:
 
 ```
 ...
 return receivedata & 0x0e;
 ...
+```
+
+### Setup
+
+LED and RS485 Enable Pin is setup as an Output. Enable Pin is set to 1 to enable transmission and reception:
+
+```
+pinMode(LED_PIN, OUTPUT);
+pinMode(WREN_PIN, OUTPUT);
+digitalWrite(WREN_PIN, HIGH);
+```
+
+To read the digital values of the DIP Switch, pull-up resistors are enable and node address is calculated:
+
+```
+pinMode(ADDR0_PIN, INPUT_PULLUP);
+pinMode(ADDR1_PIN, INPUT_PULLUP);
+pinMode(ADDR2_PIN, INPUT_PULLUP);
+pinMode(ADDR3_PIN, INPUT_PULLUP);
+
+ADDR = digitalRead(ADDR0_PIN) | digitalRead(ADDR1_PIN)<<1 | digitalRead(ADDR2_PIN)<<2 | digitalRead(ADDR3_PIN)<<3;
 ```
 
 ### System Diagram
