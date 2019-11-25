@@ -29,7 +29,7 @@ UCSR0C = (1<<USBS0)|(1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
 
 ### Frame Format
 
-type | start | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | stopbit | stopbit
+# | start | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | stopbit | stopbit
 --- | --- | --- | --- |--- |--- |--- |--- |--- |--- |--- |--- |---
 bit | LOW | X | X | X | X | X | X | X | X | X | HIGH | HIGH 
 
