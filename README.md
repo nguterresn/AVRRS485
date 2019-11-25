@@ -8,7 +8,7 @@
 
 ### Initialization
 
-Since the PlatoformIO serial monitor is set to a baudrate of 9600, the USART baudrate should be 9600 in order to monitor data:
+Since the [PlatformIO](https://platformio.org) serial monitor is set to a baudrate of 9600, the USART baudrate should be 9600 in order to monitor data:
 
 ```
 /* uc freq = 8Mhz */
@@ -190,9 +190,9 @@ state = 0;
 
 ### PCB
 This circuit was designed to be easily tested and programmed. In addition to the mandatory requirements, a FT232 interface, a AVR ISP and a 5V voltage regulator was added as optional requirements. 
-- The FT232 interface will allow testing Rx and Tx communications using a FTDI chip connected to a USB port, using a computer to track results. [FTDI](https://en.wikipedia.org/wiki/FTDI)
-- The ISP interface will allow uC to be programmed.
-- 5V Voltage regulator allows acceptance of higher input voltages (up to 12V) without compromising the system behavior. 
+- The FT232 interface will allow testing Rx and Tx communications using a [FTDI](https://en.wikipedia.org/wiki/FTDI) chip connected to a USB port, using a computer to track results. 
+- The [ISP](https://www.elementzonline.com/image/cache/catalog/data/products/Programmers%20and%20Debuggers/USBasp/isp_header-500x500.jpg) interface will allow uC to be programmed.
+- 5V Voltage regulator (7805) allows acceptance of higher input voltages (up to 12V) without compromising the system behavior. 
 
 #### Schematic
 
