@@ -9,7 +9,9 @@
 #define ADDRESS 1
 #define DATATYPE 0
 
-uint8_t ADDR, ADDR_R, state, command;
+uint8_t ADDR, ADDR_R, state;
+uint8_t data;
+uint8_t button1 = 0, button2 = 0;
 
 #define LED_PIN   13
 #define ADDR3_PIN 11
@@ -20,7 +22,7 @@ uint8_t ADDR, ADDR_R, state, command;
 #define BUT2_PIN  6
 #define WREN_PIN  2
 
-#define FOSC 8000000 // Clock Speed #define BAUD 9600
+#define FOSC 16000000 // Clock Speed #define BAUD 9600
 #define BAUD 9600
 #define MYUBRR FOSC/16/BAUD-1
 
@@ -31,6 +33,7 @@ void asynch9_init(long ubrr) {
     /*Set baud rate */
     UBRR0H = (unsigned char)(ubrr>>8); 
     UBRR0L = (unsigned char) ubrr;
+
     /* Enable receiver and transmitter */ 
     UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 
@@ -58,10 +61,10 @@ void send_data(uint8_t data) {
     UDR0 = data;
 }
 
-uint8_t get_data(uint8_t type) {
+int get_data(uint8_t *buffer) {
     
     // put your code here, to receive a data byte using multi processor communication mode:
-	unsigned char status, ninthbit, receivedata;
+	unsigned char status, ninthbit;
 
     /* Wait for data to be received */ 
     while (!(UCSR0A & (1<<RXC0)));
@@ -70,23 +73,19 @@ uint8_t get_data(uint8_t type) {
     /* from buffer */ 
     status = UCSR0A; 
     ninthbit = UCSR0B; 
-    // data //
-    receivedata = UDR0;
 
     /* If error, return -1 */
-    if (status & ((1<<FE0)|(1<<DOR0)|(1<<UPE0)))
-        return ERROR;
+    if (status & ((1<<FE0)|(1<<DOR0)))
+        return ERROR;// <- is signed
 
     /* Filter the 9th bit, then return */ 
     /* delimita o registo ao nono bit */
     ninthbit = (ninthbit >> 1) & 0x01; 
 
-    if (ninthbit && type) {
-		return receivedata & 0x0e;
-	} else if (!(ninthbit) && !(type)) {
-		return receivedata;
-	} else return ERROR;
-    
+	*buffer = UDR0;
+
+    return ninthbit;
+
 }
 
 void setup() {
@@ -95,78 +94,83 @@ void setup() {
   	asynch9_init(MYUBRR);
   	pinMode(LED_PIN, OUTPUT);
   	pinMode(WREN_PIN, OUTPUT);
-  	digitalWrite(WREN_PIN, HIGH);
 
   	pinMode(ADDR0_PIN, INPUT_PULLUP);
   	pinMode(ADDR1_PIN, INPUT_PULLUP);
   	pinMode(ADDR2_PIN, INPUT_PULLUP);
 	pinMode(ADDR3_PIN, INPUT_PULLUP);
 
+	digitalWrite(WREN_PIN, LOW);
+
   	ADDR = digitalRead(ADDR0_PIN) | digitalRead(ADDR1_PIN)<<1 | digitalRead(ADDR2_PIN)<<2 | digitalRead(ADDR3_PIN)<<3;
 
-	state = 0;
+	if (ADDR == MASTER_ADDR) {
+		pinMode(BUT1_PIN, INPUT_PULLUP);
+		pinMode(BUT2_PIN, INPUT_PULLUP);
+	} 
+	else
+	{
+		/* Multi-processor Communication Mode */
+		UCSR0A = (1<<MPCM0);
+		digitalWrite(LED_PIN, LOW);
+	}
 
 }
 
 void loop() {
 
 	if (ADDR == MASTER_ADDR) {
-    /* Pull up ? */
-		if (!(digitalRead(BUT1_PIN))) {
 
-    		send_addr(SLAVE1_ADDR);
-			delay(50);
-    		send_data(ON);
-			delay(2000);
-    		send_data(OFF);
+		digitalWrite(WREN_PIN, HIGH);
+    	/* Pull up ? */
+		while (!(digitalRead(BUT1_PIN))) {
 
+			if (!button1) {
+				send_addr(SLAVE1_ADDR);
+				send_data(ON);
+				button1 = 1;
+			}
     	}
 
-    	if (!(digitalRead(BUT2_PIN))) {
+    	while (!(digitalRead(BUT2_PIN))) {
 
-    		send_addr(SLAVE2_ADDR);
-    		delay(50);
-    		send_data(ON);
-    		delay(2000);
-    		send_data(OFF);
-
+    		if (!button2) {
+				send_addr(SLAVE2_ADDR);
+				send_data(ON);
+				button2 = 1;
+			}
 		}
+
+		if (button1 || button2)
+			send_data(OFF);
+
+		button1 = 0;
+		button2 = 0;
 
 	} else {
 
-		if (state == 0) {
-
-			ADDR_R = get_data(ADDRESS);
-
-			while (ADDR_R == ERROR)
-				ADDR_R = get_data(ADDRESS);
-		}
-
-		if (state == 1) {
-			
-			command = get_data(DATATYPE);
-
-			while (command != ERROR) {
-				
-				digitalWrite((command>>7) & 0x01, LED_PIN);
-
-				command = get_data(DATATYPE);
-			}
-
-			state = 0;
-		}
+		get_data(&ADDR_R);
 
 		/* ADDRESSED */
 		if (ADDR_R == ADDR) {
-			state = 1;
-		}
 
-		/* UNADDRESSED */
-		if ((ADDR_R != ADDR) && (ADDR_R != ERROR)) {
-			state = 0;
-		}
+			UCSR0A &= 0xfe; 
 
+			/* Improve this - automate */
+
+			get_data(&data);
+
+			digitalWrite(LED_PIN, data>>7 & 0x01);
+
+			get_data(&data);
+
+			digitalWrite(LED_PIN, data>>7 & 0x01);
+
+			/* til here */
+
+			UCSR0A |= (1<<MPCM0); 
+
+		} 
+			
 	}
-	
-
 }
