@@ -6,10 +6,8 @@
 #define ON 255  // b11111111
 #define OFF 127 // b01111111
 #define ERROR 43
-#define ADDRESS 1
-#define DATATYPE 0
 
-uint8_t ADDR, ADDR_R, state;
+uint8_t ADDR, ADDR_R;
 uint8_t data;
 uint8_t button1 = 0, button2 = 0;
 
@@ -122,7 +120,8 @@ void loop() {
 	if (ADDR == MASTER_ADDR) {
 
 		digitalWrite(WREN_PIN, HIGH);
-			/* Pull up ? */
+		
+		/* Pull up  */
 		while (!(digitalRead(BUT1_PIN))) {
 
 			if (!button1) {
