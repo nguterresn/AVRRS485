@@ -156,9 +156,11 @@ void loop() {
 		if (ADDR_R == ADDR) {
 
 			UCSR0A &= 0xfe; 
-
-			while (get_data(&data) != ERROR) 
-				digitalWrite(LED_PIN, data>>7 & 0x01);
+			
+			get_data(&data);
+			digitalWrite(LED_PIN, data>>7 & 0x01);
+			get_data(&data);
+			digitalWrite(LED_PIN, data>>7 & 0x01);
 
 			UCSR0A |= (1<<MPCM0); 
 
