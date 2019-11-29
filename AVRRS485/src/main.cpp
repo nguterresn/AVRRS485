@@ -5,7 +5,7 @@
 #define SLAVE2_ADDR 14
 #define ON 255  // b11111111
 #define OFF 127 // b01111111
-#define ERROR -1
+#define ERROR 43
 #define ADDRESS 1
 #define DATATYPE 0
 
@@ -61,7 +61,7 @@ void send_data(uint8_t data) {
     UDR0 = data;
 }
 
-int get_data(uint8_t *buffer) {
+uint8_t get_data(uint8_t *buffer) {
     
     // put your code here, to receive a data byte using multi processor communication mode:
 	unsigned char status, ninthbit;
@@ -130,6 +130,7 @@ void loop() {
 				send_data(ON);
 				button1 = 1;
 			}
+
 		}
 
 		while (!(digitalRead(BUT2_PIN))) {
@@ -139,13 +140,14 @@ void loop() {
 				send_data(ON);
 				button2 = 1;
 				}
+
 			}
 
-			if (button1 || button2)
-				send_data(OFF);
+		if (button1 || button2)
+			send_data(OFF);
 
-			button1 = 0;
-			button2 = 0;
+		button1 = 0;
+		button2 = 0;
 
 	} else {
 
@@ -156,17 +158,8 @@ void loop() {
 
 			UCSR0A &= 0xfe; 
 
-			/* Improve this - automate */
-
-			get_data(&data);
-
-			digitalWrite(LED_PIN, data>>7 & 0x01);
-
-			/*get_data(&data);
-
-			digitalWrite(LED_PIN, data>>7 & 0x01);*/
-
-			/* til here */
+			while (get_data(&data) != ERROR) 
+				digitalWrite(LED_PIN, data>>7 & 0x01);
 
 			UCSR0A |= (1<<MPCM0); 
 
