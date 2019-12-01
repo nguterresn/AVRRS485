@@ -11,27 +11,27 @@
 Since the [PlatformIO](https://platformio.org) serial monitor is set to a baudrate of 9600, the USART baudrate should be 9600 in order to monitor data:
 
 ```
-/* uc freq = 8Mhz */
-#define FOSC 8000000 
+#define FOSC 16000000 
 #define BAUD 9600
 #define MYUBRR FOSC/16/BAUD-1
 ```
+###### Note: Microcontroller frequency is set to 16 MHz.
 
 To be able to use USART, the receiver (RX) and the transmitter (TX) should be enable:
 ```
 UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 ```
 
-The frame format should have a **9 bit** to distinguish between address frames and data frames (+2 stop bits):
+The frame format should have a **9th bit** to distinguish between address frames and data frames (+1 stop bits):
 ```
-UCSR0C = (1<<USBS0)|(1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
+UCSR0C = (1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
 ```
 
 ### Frame Format
 
-Frame | start | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | stopbit | stopbit
---- | --- | --- | --- |--- |--- |--- |--- |--- |--- |--- |--- |---
-Bit | LOW | X | X | X | X | X | X | X | X | X | HIGH | HIGH 
+Frame | start | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | stopbit 
+--- | --- | --- | --- |--- |--- |--- |--- |--- |--- |--- |--- 
+Bit | LOW | X | X | X | X | X | X | X | X | X | HIGH 
 
 ### Transmission
 
@@ -59,7 +59,9 @@ UDR0 = addr;
 To send a Data Frame:
 
 ```
-send_data(data);
+send_data(ON);
+...
+send_data(OFF);
 ```
 
 Waits until the channel is empty, saves 0 into TXB8 (9 bit) and sends data:
@@ -75,23 +77,10 @@ UDR0 = data;
 
 ### Reception
 
-Address is defined as:
-```
-#define ADDRESS 1
-```
-
-Data is defined as:
-```
-#define DATATYPE 0
-```
-
-To receive data, call:
-
-- ADDRESS to return an address;
-- DATATYPE to return a data frame;
+To receive, call:
 
 ```
-get_data(ADDRESS or DATATYPE):
+get_data(&ADDRESS or &DATATYPE):
 ```
 
 Waits for until receives something and checks if one of these error occur:
@@ -107,38 +96,28 @@ if (UCSR0A & ((1<<FE0)|(1<<DOR0)))
 	return ERROR;
 ```
 
+###### Note: Frame Error happens when, i.e., the next character of stop bit is 0. 
+###### Note: Data OverRun occurs when the receive buffer is full.
 ###### Note: USART Parity Error (UPE0) is not enable since there is no parity bit in the initialize frame.
 
-After checking errors appearance, ninth bit is filtered from UCSR0B register and data is returned:
+After checking errors appearance, ninth bit is filtered from UCSR0B register, it is returned and buffer is updated with new received data from *UDR0*:
 
 ```
 ...
-ninthbit = UCSR0B; 
 ninthbit = (ninthbit >> 1) & 0x01; 
 
-if (ninthbit && type) {
-	return receivedata & 0x0e;
-} else if (!(ninthbit) && !(type)) {
-	return receivedata;
-} else return ERROR;
-```
+*buffer = UDR0;
 
-Since Master has the 15th address, all the slave are within 0 and 14:
-
-```
-...
-return receivedata & 0x0e;
-...
+return ninthbit;
 ```
 
 ### Setup
 
-LED and RS485 Enable Pin is setup as an Output. Enable Pin is set to 1 to enable transmission and reception:
+LED and RS485 Enable Pin is setup as an Output. 
 
 ```
 pinMode(LED_PIN, OUTPUT);
 pinMode(WREN_PIN, OUTPUT);
-digitalWrite(WREN_PIN, HIGH);
 ```
 
 To read the digital values of the DIP Switch, pull-up resistors are enable and node address is calculated:
@@ -152,39 +131,55 @@ pinMode(ADDR3_PIN, INPUT_PULLUP);
 ADDR = digitalRead(ADDR0_PIN) | digitalRead(ADDR1_PIN)<<1 | digitalRead(ADDR2_PIN)<<2 | digitalRead(ADDR3_PIN)<<3;
 ```
 
+In case of master address, the pull-up resistors connected to the buttons are enable and the RS485 enable pin (WREN_PIN) is set to 1, in order to be able to send data to the slaves:
+
+```
+if (ADDR == MASTER_ADDR) {
+
+	pinMode(BUT1_PIN, INPUT_PULLUP);
+	pinMode(BUT2_PIN, INPUT_PULLUP);
+	
+	digitalWrite(WREN_PIN, HIGH);
+	
+} 
+```
+
+Otherwise, the Multi-processor Communication Mode is disable and the LED is turned off.
+
+```
+else
+{
+	/* Multi-processor Communication Mode */
+	UCSR0A = (1<<MPCM0);
+	digitalWrite(LED_PIN, LOW);
+}
+```
+
 ### System Diagram
 #### Master-Slave - Slave Side
 
 ![blockdiagramMS](https://user-images.githubusercontent.com/38976366/69570464-c95d7b00-0fb7-11ea-93ed-bc8e6e174572.png)
 
+#### Multi-processor Communication Mode
 
-On the Slave side, *state* = 1 means an **Adressed State**, meaning the slave is receiving orders from the master. So, *state* = 0 means an **Unaddressed State**, meaning the slave is not receiving data from the master.
-
-In order to leave this **Unaddressed State**, the Slave must receive an address that matches its one:
-
-```
-ADDR = digitalRead(ADDR0_PIN) | digitalRead(ADDR1_PIN)<<1 | digitalRead(ADDR2_PIN)<<2 | digitalRead(ADDR3_PIN)<<3;
-(...)
-ADDR_R = get_data(ADDRESS);
-
-if(ADDR_R == ADDR) ...
-```
-
-By the time the slave is  on the **Addressed State**, it receives data until it receives a different address. Changes to *state* = 0, to an **Unaddressed State**
+This method allows to distinguish between address and datatype frames. When a node is considered addressed, the multi-processor communication mode is enable, it only receives datatype commands and discards address frames, until multi-processor communication mode is disable:
 
 ```
 ...
-command = get_data(DATATYPE);
+/* If address received from master matches the local address set by the DIP switches. */
 
-  while (command != ERROR) {
-				
-		digitalWrite((command>>7) & 0x01, LED_PIN);
+/* ADDRESSED */
+if (ADDR_R == ADDR) {
+	
+	/* Multi-processor Communication Mode ENABLE */
+	UCSR0A &= 0xfe; 
+	
+	/* Received frames are all of datatype format, addressed ones are discarded */
+	
+	/* Multi-processor Communication Mode DISABLE */
+	UCSR0A |= (1<<MPCM0); 
 
-		command = get_data(DATATYPE);
-	}
-
-state = 0;
-...
+} 
 ```
 
 
