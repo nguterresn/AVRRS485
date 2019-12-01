@@ -100,7 +100,7 @@ if (UCSR0A & ((1<<FE0)|(1<<DOR0)))
 ###### Note: Data OverRun occurs when the receive buffer is full.
 ###### Note: USART Parity Error (UPE0) is not enable since there is no parity bit in the initialize frame.
 
-After checking errors appearance, ninth bit is filtered from UCSR0B register, it is returned and buffer is updated with new received data from *UDR0*:
+After checking errors appearance, ninth bit is filtered from UCSR0B register and it is returned. The parameter buffer is updated with new received data from *UDR0*:
 
 ```
 ...
@@ -184,6 +184,17 @@ if (ADDR_R == ADDR) {
 	UCSR0A |= (1<<MPCM0); 
 
 } 
+```
+
+#### LED Commands
+
+The LED is turned on and turned off by received ON and OFF (from the master), respectively, with value 255 and 127.
+This received value is shifted 7 bits to have a value between 0 and 1, in order to command the LED:
+
+```
+...
+digitalWrite(LED_PIN, data>>7 & 0x01);
+...
 ```
 
 
