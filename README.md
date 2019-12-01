@@ -144,21 +144,25 @@ if (ADDR == MASTER_ADDR) {
 } 
 ```
 
-Otherwise, the Multi-processor Communication Mode is disable and the LED is turned off.
+On the other hand, the Multi-processor Communication Mode is disable, the LED is turned off and the RS485 enable pin (WREN_PIN) is set to 0, in order to be able to receive data from the master:
 
 ```
+/* SLAVE */
 else
 {
 	/* Multi-processor Communication Mode */
 	UCSR0A = (1<<MPCM0);
+	
 	digitalWrite(LED_PIN, LOW);
+	
+	digitalWrite(WREN_PIN, LOW);
 }
 ```
 
 ### System Diagram
 #### Master-Slave - Slave Side
 
-![blockdiagramMS](https://user-images.githubusercontent.com/38976366/69570464-c95d7b00-0fb7-11ea-93ed-bc8e6e174572.png)
+![blockdiagramMS-2](https://user-images.githubusercontent.com/38976366/69921649-c49f3800-148b-11ea-84ee-ffaaa21135db.png)
 
 #### Multi-processor Communication Mode
 
