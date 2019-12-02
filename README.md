@@ -6,12 +6,12 @@
 
 ### Contents
 
-- [USART Configuration](#USARTConfiguration)
-- [Frame Format](#FrameFormat)
+- [USART Configuration](#USART-Configuration)
+- [Frame Format](#Frame-Format)
 - [Transmission](#Transmission)
 - [Reception](#Reception)
 - [Setup](#Setup)
-- [System Diagram](#SystemDiagram)
+- [System Diagram](#System-Diagram)
 - [PCB](#PCB)
 
 ### USART Configuration
