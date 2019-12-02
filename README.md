@@ -6,10 +6,16 @@
 - [USART Configuration](#USART-Configuration)
 - [Frame Format](#Frame-Format)
 - [Transmission](#Transmission)
+	- [Address Frame](#Address-Frame)
+	- [Data Frame](#Data-Frame)
 - [Reception](#Reception)
 - [Setup](#Setup)
 - [System Diagram](#System-Diagram)
+	- [Multi-processor Communication Mode](#Multi-processor-Communication-Mode)
+	- [LED Commands](#LED-Commands)
 - [PCB](#PCB)
+	- [Schematic](#Schematic)
+	- [PCB Design](#PCB-Design)
 
 ### System Concept
 
