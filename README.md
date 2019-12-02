@@ -1,11 +1,8 @@
 # AVR RS485 ![vshield](https://img.shields.io/github/v/release/nguterresn/SELE-AVRRS485) ![sizeshield](https://img.shields.io/github/repo-size/nguterresn/SELE-AVRRS485)
 
-### System Concept
+## Contents
 
-<img width="874" alt="Captura de ecrã 2019-11-13, às 16 04 25" src="https://user-images.githubusercontent.com/38976366/68781265-6b33ae00-062f-11ea-969e-323784b92777.png">
-
-### Contents
-
+- [System Concept](#System-Concept)
 - [USART Configuration](#USART-Configuration)
 - [Frame Format](#Frame-Format)
 - [Transmission](#Transmission)
@@ -13,6 +10,10 @@
 - [Setup](#Setup)
 - [System Diagram](#System-Diagram)
 - [PCB](#PCB)
+
+### System Concept
+
+<img width="874" alt="Captura de ecrã 2019-11-13, às 16 04 25" src="https://user-images.githubusercontent.com/38976366/68781265-6b33ae00-062f-11ea-969e-323784b92777.png">
 
 ### USART Configuration
 
