@@ -6,8 +6,13 @@
 
 ### Contents
 
-- [USART Configuration](#USART Configuration)
-- [Initialization](#Initialization)
+- [USART Configuration](#USARTConfiguration)
+- [Frame Format](#FrameFormat)
+- [Transmission](#Transmission)
+- [Reception](#Reception)
+- [Setup](#Setup)
+- [System Diagram](#SystemDiagram)
+- [PCB](#PCB)
 
 ### USART Configuration
 
