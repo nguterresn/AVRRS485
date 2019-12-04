@@ -33,10 +33,10 @@ void asynch9_init(long ubrr) {
     UBRR0L = (unsigned char) ubrr;
 
     /* Enable receiver and transmitter */ 
-    UCSR0B = (1<<RXEN0)|(1<<TXEN0);
+    UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<UCSZ02);
 
     /* Set frame format: 9data, 1stop bit. No parity bit, AS USART */ 
-    UCSR0C = (1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
+    UCSR0C = (1<<UCSZ00)|(1<<UCSZ01);
 }
 
 void send_addr(uint8_t addr) {
@@ -165,6 +165,7 @@ void loop() {
 			UCSR0A |= (1<<MPCM0); 
 
 		} 
+		
 			
 	}
 }
