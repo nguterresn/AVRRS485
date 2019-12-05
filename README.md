@@ -36,12 +36,12 @@ Since the [PlatformIO](https://platformio.org) serial monitor is set to a baudra
 
 To be able to use USART, the receiver (RX) and the transmitter (TX) should be enable:
 ```
-UCSR0B = (1<<RXEN0)|(1<<TXEN0);
+UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<UCSZ02);
 ```
 
 The frame format should have a **9th bit** to distinguish between address frames and data frames (+1 stop bits):
 ```
-UCSR0C = (1<<UCSZ00)|(1<<UCSZ01)|(1<<UCSZ02);
+UCSR0C = (1<<UCSZ00)|(1<<UCSZ01);
 ```
 
 ### Frame Format
